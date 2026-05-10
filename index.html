@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Norauto - Centre Auto Amboise RP</title>
+    <title>Norauto - Centre Automobile Amboise</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/dist/js/all.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --norauto-blue: #004593;
             --norauto-yellow: #ffca00;
-            --bg-light: #f4f7f6;
-            --text-dark: #1e293b;
+            --bg-light: #f8fafc;
+            --text-dark: #0f172a;
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body {
@@ -18,236 +20,302 @@
             margin: 0;
             background-color: var(--bg-light);
             color: var(--text-dark);
-            scroll-behavior: smooth;
+            overflow-x: hidden;
         }
 
         /* --- NAVIGATION --- */
         nav {
             background: white;
-            padding: 15px 5%;
+            padding: 10px 8%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: sticky;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            position: fixed;
+            width: 84%;
             top: 0;
             z-index: 1000;
         }
 
-        .logo-img { height: 40px; }
+        .logo-container img { height: 45px; cursor: pointer; }
+
+        .nav-links { display: flex; align-items: center; }
 
         .nav-links a {
             text-decoration: none;
             color: var(--text-dark);
             font-weight: 600;
-            margin-left: 25px;
-            font-size: 0.9em;
-            transition: 0.3s;
+            margin: 0 15px;
+            font-size: 0.95em;
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition);
         }
 
-        .nav-links a:hover { color: var(--norauto-blue); }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            bottom: -5px;
+            left: 0;
+            background: var(--norauto-yellow);
+            transition: var(--transition);
+        }
 
-        .btn-connect {
+        .nav-links a:hover::after { width: 100%; }
+
+        .btn-rdv-nav {
             background: var(--norauto-blue);
             color: white !important;
-            padding: 10px 20px;
-            border-radius: 8px;
+            padding: 12px 25px;
+            border-radius: 50px;
+            margin-left: 20px;
         }
 
-        /* --- HERO SECTION --- */
+        /* --- GESTION DES PAGES --- */
+        .page {
+            display: none; /* Toutes les pages sont cachées par défaut */
+            padding-top: 100px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        .page.active { display: block; } /* Seule la page active s'affiche */
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- ACCUEIL (HERO) --- */
         .hero {
-            background: linear-gradient(rgba(0, 69, 147, 0.8), rgba(0, 69, 147, 0.8)), url('https://images.unsplash.com/photo-1486006396113-c7b349f81f45?q=80&w=2000');
-            background-size: cover;
-            color: white;
-            padding: 100px 5%;
+            height: 90vh;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            padding: 0 8%;
+            background: radial-gradient(circle at top right, #e2e8f0, transparent), url('https://www.norauto.fr/img/cms/home/banner-desktop.jpg');
+            background-size: cover;
         }
 
-        .hero-text h1 { font-size: 3.5em; margin-bottom: 10px; }
-        .hero-text span { color: var(--norauto-yellow); }
+        .hero-content { max-width: 600px; }
+        .hero-content h1 { font-size: 4em; font-weight: 800; line-height: 1.1; margin-bottom: 20px; }
+        .hero-content h1 span { color: var(--norauto-blue); }
+        .hero-content p { font-size: 1.2em; color: #475569; margin-bottom: 35px; }
 
-        .hero-stats {
+        .stats-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .stat-card {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            padding: 20px;
-            border-radius: 12px;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.2);
-        }
-
-        /* --- TARIFS --- */
-        .section-title { text-align: center; margin: 50px 0; font-size: 2em; }
-        .section-title span { color: var(--norauto-yellow); }
-
-        .pricing-container {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 20px;
-            padding: 20px;
         }
 
-        .price-item {
+        .stat-box {
             background: white;
             padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
             text-align: center;
-            transition: 0.3s;
         }
 
-        .price-item:hover { transform: translateY(-5px); }
-        .price-val { font-size: 1.5em; font-weight: 800; color: var(--norauto-blue); display: block; margin-top: 10px; }
+        .stat-box h3 { font-size: 2em; margin: 0; color: var(--norauto-blue); }
 
-        /* --- AVIS --- */
-        .reviews-section {
+        /* --- TARIFS --- */
+        .grid-pricing {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            padding: 40px 8%;
+        }
+
+        .card-price {
             background: white;
-            padding: 60px 5%;
-            margin-top: 50px;
+            padding: 30px;
+            border-radius: 24px;
+            border: 1px solid #e2e8f0;
+            transition: var(--transition);
         }
 
-        .review-form {
-            max-width: 600px;
-            margin: 0 auto;
-            background: var(--bg-light);
-            padding: 30px;
-            border-radius: 15px;
+        .card-price:hover { border-color: var(--norauto-yellow); transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
+
+        .price-tag { font-size: 2em; font-weight: 800; color: var(--norauto-blue); display: block; margin-top: 15px; }
+
+        /* --- FORMULAIRES --- */
+        .form-wrapper {
+            max-width: 700px;
+            margin: 40px auto;
+            background: white;
+            padding: 50px;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
         }
 
         input, select, textarea {
             width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-sizing: border-box;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 1em;
+            transition: var(--transition);
         }
 
-        .btn-yellow {
+        input:focus { border-color: var(--norauto-blue); outline: none; }
+
+        .btn-submit {
             background: var(--norauto-yellow);
             color: var(--norauto-blue);
             border: none;
-            padding: 15px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
+            padding: 18px;
             width: 100%;
-            text-transform: uppercase;
-        }
-
-        .btn-blue {
-            background: var(--norauto-blue);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
+            border-radius: 12px;
+            font-weight: 800;
             cursor: pointer;
-            font-weight: bold;
-            text-decoration: none;
-            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
+        /* --- FOOTER --- */
         footer {
-            background: var(--norauto-blue);
+            background: #0f172a;
             color: white;
+            padding: 50px 8%;
             text-align: center;
-            padding: 40px;
-            margin-top: 50px;
+            margin-top: 100px;
         }
+
+        .discord-link { color: var(--norauto-yellow); text-decoration: none; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <nav>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Logo_Norauto.svg/1200px-Logo_Norauto.svg.png" class="logo-img">
+        <div class="logo-container">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Logo_Norauto.svg/1200px-Logo_Norauto.svg.png" onclick="showPage('accueil')">
+        </div>
         <div class="nav-links">
-            <a href="#accueil">Accueil</a>
-            <a href="#tarifs">Tarifs</a>
-            <a href="#avis">Avis</a>
-            <a href="#rdv" class="btn-connect">Prendre RDV</a>
+            <a onclick="showPage('accueil')">Accueil</a>
+            <a onclick="showPage('tarifs')">Tarifs</a>
+            <a onclick="showPage('avis')">Avis</a>
+            <a onclick="showPage('rdv')" class="btn-rdv-nav">Prendre RDV</a>
         </div>
     </nav>
 
-    <section id="accueil" class="hero">
-        <div class="hero-text">
-            <p>● GARAGE AUTOMOBILE — AMBOISE</p>
-            <h1>Votre auto entre<br>les mains <span>d'experts</span></h1>
-            <p>Entretien, réparation, accessoires — Norauto vous accompagne pour tous<br>vos besoins automobiles avec des tarifs transparents.</p>
-            <div style="margin-top: 30px;">
-                <a href="#rdv" class="btn-yellow" style="padding: 15px 30px; text-decoration: none;">📅 Prendre RDV</a>
-                <a href="#tarifs" class="btn-blue" style="margin-left: 10px;">Voir les tarifs</a>
+    <section id="accueil" class="page active">
+        <div class="hero">
+            <div class="hero-content">
+                <p style="font-weight: bold; color: var(--norauto-blue);">● CENTRE AUTOMOBILE — AMBOISE CITY</p>
+                <h1>Votre auto entre<br>les mains de <span>Pros.</span></h1>
+                <p>Depuis plus de 15 ans, Norauto accompagne les citoyens pour l'entretien, la réparation et la personnalisation de leurs véhicules avec passion.</p>
+                <div style="display: flex; gap: 20px;">
+                    <button class="btn-submit" style="width: auto; padding: 15px 40px;" onclick="showPage('rdv')">Commencer maintenant</button>
+                </div>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-box"><h3>10+</h3><p>Services experts</p></div>
+                <div class="stat-box"><h3>4.9/5</h3><p>Satisfaction</p></div>
+                <div class="stat-box"><h3>15+</h3><p>Membres actifs</p></div>
+                <div class="stat-box"><h3>-15%</h3><p>Offre Public</p></div>
             </div>
         </div>
-        <div class="hero-stats">
-            <div class="stat-card"><h3>10+</h3><p>Services</p></div>
-            <div class="stat-card"><h3>4.9/5</h3><p>Note clients</p></div>
-            <div class="stat-card"><h3>-15%</h3><p>Service Public</p></div>
-            <div class="stat-card"><h3>15+</h3><p>Membres</p></div>
+    </section>
+
+    <section id="tarifs" class="page">
+        <h1 style="text-align: center; font-size: 3em; margin-top: 50px;">Nos <span>Tarifs</span></h1>
+        <div class="grid-pricing">
+            <div class="card-price">
+                <i class="fas fa-paint-brush fa-2x" style="color: var(--norauto-blue);"></i>
+                <h3>Flocage Complet</h3>
+                <p>Design personnalisé pour votre entreprise ou gang.</p>
+                <span class="price-tag">2 500 €</span>
+            </div>
+            <div class="card-price">
+                <i class="fas fa-battery-full fa-2x" style="color: var(--norauto-blue);"></i>
+                <h3>Batterie Neuve</h3>
+                <p>Installation et garantie 2 ans incluses.</p>
+                <span class="price-tag">600 €</span>
+            </div>
+            <div class="card-price">
+                <i class="fas fa-engine fa-2x" style="color: var(--norauto-blue);"></i>
+                <h3>Moteur Complet</h3>
+                <p>Changement standard ou haute performance.</p>
+                <span class="price-tag">1 200 €</span>
+            </div>
+            <div class="card-price">
+                <i class="fas fa-gas-pump fa-2x" style="color: var(--norauto-blue);"></i>
+                <h3>Bidon d'essence</h3>
+                <p>Plein de 20L pour vos longs trajets.</p>
+                <span class="price-tag">350 €</span>
+            </div>
+            <div class="card-price">
+                <i class="fas fa-fill-drip fa-2x" style="color: var(--norauto-blue);"></i>
+                <h3>Peinture</h3>
+                <p>Toutes les couleurs classiques et mates.</p>
+                <span class="price-tag">800 €</span>
+            </div>
+            <div class="card-price">
+                <i class="fas fa-tools fa-2x" style="color: var(--norauto-blue);"></i>
+                <h3>Courroie</h3>
+                <p>Entretien préventif distribution.</p>
+                <span class="price-tag">400 €</span>
+            </div>
         </div>
     </section>
 
-    <section id="tarifs">
-        <h2 class="section-title">Nos <span>Tarifs</span></h2>
-        <div class="pricing-container">
-            <div class="price-item"><h3>Flocages</h3><p>Prix Standard</p><span class="price-val">2 500 €</span></div>
-            <div class="price-item"><h3>Batterie</h3><p>Prix Standard</p><span class="price-val">600 €</span></div>
-            <div class="price-item"><h3>Bidons d'essence</h3><p>Prix Standard (Plein)</p><span class="price-val">350 €</span></div>
-            <div class="price-item"><h3>Bougie d'allumage</h3><p>Prix Standard</p><span class="price-val">150 €</span></div>
-            <div class="price-item"><h3>Courroie</h3><p>Distribution</p><span class="price-val">400 €</span></div>
-            <div class="price-item"><h3>Moteur Complet</h3><p>Installation incluse</p><span class="price-val">1 200 €</span></div>
-            <div class="price-item"><h3>Peinture</h3><p>Couleur standard</p><span class="price-val">800 €</span></div>
-            <div class="price-item"><h3>Déplacement</h3><p>Intervention</p><span class="price-val">200 €</span></div>
-        </div>
-    </section>
-
-    <section id="rdv" style="padding: 60px 5%;">
-        <h2 class="section-title">Prendre <span>Rendez-vous</span></h2>
-        <div class="review-form">
+    <section id="rdv" class="page">
+        <h1 style="text-align: center; font-size: 3em;">Prendre <span>RDV</span></h1>
+        <div class="form-wrapper">
             <form action="https://formspree.io/f/xaqvllva" method="POST">
-                <input type="text" name="nom" placeholder="Votre Nom RP" required>
-                <input type="text" name="vehicule" placeholder="Modèle du véhicule" required>
+                <label>Nom / Prénom RP</label>
+                <input type="text" name="nom" placeholder="Ex: John Doe" required>
+                <label>Véhicule</label>
+                <input type="text" name="vehicule" placeholder="Ex: Sultan RS" required>
+                <label>Type de prestation</label>
                 <select name="service">
-                    <option value="mecanique">Mécanique</option>
-                    <option value="esthetique">Esthétique / Flocage</option>
-                    <option value="depannage">Dépannage</option>
+                    <option value="mecanique">Mécanique Générale</option>
+                    <option value="peinture">Peinture / Flocage</option>
+                    <option value="urgence">Dépannage d'urgence</option>
                 </select>
-                <textarea name="message" rows="4" placeholder="Détails de l'intervention..."></textarea>
-                <button type="submit" class="btn-yellow">Envoyer la demande</button>
+                <label>Précisions</label>
+                <textarea name="message" rows="4" placeholder="Détaillez votre besoin..."></textarea>
+                <button type="submit" class="btn-submit">Valider le rendez-vous</button>
             </form>
         </div>
     </section>
 
-    <section id="avis" class="reviews-section">
-        <h2 class="section-title">Laissez un <span>Avis</span></h2>
-        <div class="review-form">
+    <section id="avis" class="page">
+        <h1 style="text-align: center; font-size: 3em;">Laissez un <span>Avis</span></h1>
+        <div class="form-wrapper">
             <form action="https://formspree.io/f/xaqvllva" method="POST">
-                <input type="text" name="nom_avis" placeholder="Votre Nom" required>
+                <input type="text" name="nom_avis" placeholder="Votre nom" required>
                 <select name="note">
-                    <option value="5">⭐⭐⭐⭐⭐ (5/5)</option>
-                    <option value="4">⭐⭐⭐⭐ (4/5)</option>
-                    <option value="3">⭐⭐⭐ (3/5)</option>
+                    <option value="5">⭐⭐⭐⭐⭐ Parfait</option>
+                    <option value="4">⭐⭐⭐⭐ Très bon</option>
+                    <option value="3">⭐⭐⭐ Correct</option>
                 </select>
-                <textarea name="commentaire" placeholder="Votre expérience chez Norauto..." required></textarea>
-                <button type="submit" class="btn-blue" style="width: 100%;">🌟 Publier mon avis</button>
+                <textarea name="commentaire" placeholder="Votre avis nous aide à grandir..."></textarea>
+                <button type="submit" class="btn-submit" style="background: var(--norauto-blue); color: white;">Publier l'avis</button>
             </form>
         </div>
     </section>
 
     <footer>
-        <p>© 2026 Norauto Amboise — Tous droits réservés</p>
-        <div style="margin-top: 15px;">
-            <a href="https://discord.gg/5kWRCu32" style="color: white; text-decoration: none;"><i class="fab fa-discord"></i> Rejoindre le Discord</a>
-        </div>
+        <p>© 2026 Norauto Amboise City — Votre garage de confiance</p>
+        <p><a href="https://discord.gg/5kWRCu32" class="discord-link"><i class="fab fa-discord"></i> Rejoindre le serveur Discord</a></p>
     </footer>
+
+    <script>
+        function showPage(pageId) {
+            // Cacher toutes les pages
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => page.classList.remove('active'));
+
+            // Afficher la page demandée
+            document.getElementById(pageId).classList.add('active');
+
+            // Remonter en haut de la page
+            window.scrollTo(0, 0);
+        }
+    </script>
 
 </body>
 </html>
